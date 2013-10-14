@@ -3,7 +3,7 @@ package Text::Amuse;
 use 5.010001;
 use strict;
 use warnings;
-use Data::Dumper;
+# use Data::Dumper;
 use Text::Amuse::Document;
 use Text::Amuse::Output;
 
@@ -13,11 +13,11 @@ Text::Amuse - Perl module to generate HTML and LaTeX documents from Emacs Muse m
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -265,16 +265,19 @@ Babel, Polyglossia, etc.
 sub _language_mapping {
     my $self = shift;
     return {
+            cs => 'czech',
+            de => 'german',
             en => 'english',
+            es => 'spanish',
+            fi => 'finnish',
+            fr => 'french',
+            hr => 'croatian',
             it => 'italian',
             sr => 'serbian',
-            hr => 'croatian',
             ru => 'russian',
-            es => 'spanish',
-            pt => 'portuguese',
-            de => 'german',
-            fr => 'french',
             nl => 'dutch',
+            pt => 'portuguese',
+            tr => 'turkish',
            };
 }
 
