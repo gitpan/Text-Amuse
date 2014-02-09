@@ -21,4 +21,4 @@ requires:
   perl: 5.010001
 resources:
   repository: https://gitorious.org/text-amuse
-version: 0.06
+version: 0.07

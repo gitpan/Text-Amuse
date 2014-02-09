@@ -115,6 +115,7 @@ my $tt;
 my $current_dir = getcwd();
 
 foreach my $file (@ARGV) {
+    print "Working on $file\n";
     # reset the dir
     chdir $current_dir or die "Cannot chdir into $current_dir";
     # reset tt
@@ -129,6 +130,7 @@ foreach my $file (@ARGV) {
         print "Working on $name in $path\n";
     }
     make_html($name);
+    make_bare_html($name);
     make_latex($name);
     make_epub($name);
 }
@@ -281,14 +283,28 @@ caption {
 }
 
 img.embedimg {
-    margin: 1em;
     max-width:90%;
 }
-div.image {
+div.image, div.float_image_f {
     margin: 1em;
     text-align: center;
     padding: 3px;
     background-color: white;
+}
+
+div.float_image_r {
+    float: right;
+}
+
+div.float_image_l {
+    float: left;
+}
+
+div.float_image_f {
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 .biblio p, .play p {
@@ -342,6 +358,22 @@ div#tableofcontents{
 }
 EOF
     return \$css;
+}
+
+sub _bare_html_template {
+    my $html = <<'EOF';
+
+[%- IF doc.toc_as_html -%]
+<div class="table-of-contents">
+[% doc.toc_as_html %]
+</div>
+[%- END -%]
+
+<div id="thework">
+[% doc.as_html %]
+</div>
+EOF
+    return \$html;
 }
 
 
@@ -412,6 +444,24 @@ EOF
 }
 
 
+sub make_bare_html {
+    my $file = shift;
+    my $doc = Text::Amuse->new(file => $file);
+    my $out = "";
+    my $in = _bare_html_template();
+    $tt->process($in, {
+                       doc => $doc,
+                      }, \$out);
+    my $outfile = $file;
+    $outfile =~ s/muse$/bare.html/;
+    open (my $fh, ">:encoding(utf-8)", $outfile)
+      or die "Couldn't open $outfile: $!";
+    print $fh $out;
+    close $fh;
+    print "$outfile generated\n";
+}
+
+
 sub make_html {
     my $file = shift;
     my $doc = Text::Amuse->new(file => $file);
@@ -423,7 +473,8 @@ sub make_html {
                       }, \$out);
     my $outfile = $file;
     $outfile =~ s/muse$/html/;
-    open (my $fh, ">:encoding(utf-8)", $outfile);
+    open (my $fh, ">:encoding(utf-8)", $outfile)
+      or die "Couldn't open $outfile: $!";
     print $fh $out;
     close $fh;
     print "$outfile generated\n";
@@ -460,6 +511,11 @@ sub _embedded_latex_template {
 \usepackage{indentfirst}
 % remove the numbering
 \setcounter{secnumdepth}{-2}
+
+% remove labels from the captions
+\renewcommand*{\captionformat}{}
+\renewcommand*{\figureformat}{}
+
 
 % avoid breakage on multiple <br><br> and avoid the next [] to be eaten
 \newcommand*{\forcelinebreak}{~\\\relax}
@@ -540,7 +596,8 @@ sub make_latex {
     $tt->process($in, { doc => $doc, xtx => $xtx }, \$out);
     my $outfile = $file;
     $outfile =~ s/muse$/tex/;
-    open (my $fh, ">:encoding(utf-8)", $outfile);
+    open (my $fh, ">:encoding(utf-8)", $outfile)
+      or die "Couldn't open $outfile: $!";
     print $fh $out;
     close $fh;
     print "$outfile  generated\n";
@@ -551,6 +608,7 @@ sub make_latex {
     my $base = $file;
     $base =~ s/muse$//;
     cleanup($base);
+    # TODO unclear if 3 time is enough, maybe check the toc length?
     for (1..3) {
         my $pid = open(KID, "-|");
         defined $pid or die "Can't fork: $!";
@@ -569,10 +627,17 @@ sub make_latex {
             }
             close KID or warn "Compilation failed\n";
             my $exit_code = $? >> 8;
-            unless ($exit_code == 0) {
-                warn "$exec compilation failed with exit code $exit_code, " .
-                  "skipping PDF generation\n";
-                return;
+            if ($exit_code != 0) {
+                warn "$exec compilation failed with exit code $exit_code\n";
+                if (-f $base . 'log') {
+                    # if we have a .log file, this means something was
+                    # produced.
+                    die "Bailing out!";
+                }
+                else {
+                    warn "Skipping PDF generation\n";
+                    return;
+                }
             }
         }
         else {
