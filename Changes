@@ -1,5 +1,9 @@
 Revision history for perl module Text::Amuse
 
+0.08 2014-02-16
+ - If tables have a caption (\caption[]{text}), they are floats now
+ - Fixed line-breaks in captions
+
 0.07 2014-02-09
 
  - Fixed LaTeX output for captions and tables

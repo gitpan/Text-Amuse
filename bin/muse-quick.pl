@@ -379,12 +379,14 @@ EOF
 
 sub _embedded_html_template {
     my $html = <<'EOF';
-<!doctype html>
-<html>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta charset="UTF-8">
-<title>[% doc.header_as_html.title %]</title>
-    <style type="text/css">
+  <meta http-equiv="Content-type" content="application/xhtml+xml; charset=UTF-8" />
+  <title>[% doc.header_as_html.title %]</title>
+  <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
 [% css %]
   /*]]>*/-->
@@ -515,10 +517,16 @@ sub _embedded_latex_template {
 % remove labels from the captions
 \renewcommand*{\captionformat}{}
 \renewcommand*{\figureformat}{}
+\renewcommand*{\tableformat}{}
+\KOMAoption{captions}{belowfigure,nooneline}
+\addtokomafont{caption}{\centering}
+
+
+
 
 
 % avoid breakage on multiple <br><br> and avoid the next [] to be eaten
-\newcommand*{\forcelinebreak}{~\\\relax}
+\newcommand*{\forcelinebreak}{\strut\\{}}
 
 \newcommand*{\hairline}{%
   \bigskip%
@@ -745,13 +753,13 @@ sub make_epub {
         my $index = shift(@toc);
         my $xhtml = "";
         # print Dumper($index);
-        my $filename = "piece" . $index->{index};
+        my $filename = "piece" . $index->{index} . '.xhtml';
         my $title = "*" x $index->{level} . " " . $index->{string};
         $tt->process($in, { title => _remove_html_tags($title),
                             text => $fi },
                      \$xhtml);
         my $id = $epub->add_xhtml($filename, $xhtml);
-        $epub->add_navpoint(label => $index->{string},
+        $epub->add_navpoint(label => _clean_html($index->{string}),
                             content => $filename,
                             id => $id,
                             play_order => ++$order);
@@ -779,5 +787,17 @@ sub _remove_html_tags {
     my $string = shift;
     return "" unless defined $string;
     $string =~ s/<.+?>//g;
+    return $string;
+}
+
+sub _clean_html {
+    my ($string) = @_;
+    return "" unless defined $string;
+    $string =~ s/<.+?>//g;
+    $string =~ s/&lt;/</g;
+    $string =~ s/&gt;/>/g;
+    $string =~ s/&quot;/"/g;
+    $string =~ s/&#x27;/'/g;
+    $string =~ s/&amp;/&/g;
     return $string;
 }

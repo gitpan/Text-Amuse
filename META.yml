@@ -3,6 +3,8 @@ abstract: 'Perl module to generate HTML and LaTeX documents from Emacs Muse mark
 author:
   - 'Marco Pessotto <melmothx@gmail.com>'
 build_requires:
+  Data::Dumper: 0
+  File::Spec: 0
   Test::More: 0
 configure_requires:
   ExtUtils::MakeMaker: 0
@@ -18,7 +20,8 @@ no_index:
     - t
     - inc
 requires:
+  File::Temp: 0
   perl: 5.010001
 resources:
   repository: https://gitorious.org/text-amuse
-version: 0.07
+version: 0.08

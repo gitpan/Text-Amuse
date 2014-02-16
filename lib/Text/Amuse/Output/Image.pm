@@ -2,7 +2,6 @@ package Text::Amuse::Output::Image;
 use strict;
 use warnings;
 use utf8;
-use Scalar::Util qw/looks_like_number/;
 
 =head1 NAME
 
@@ -76,7 +75,7 @@ sub new {
     }
 
     if (my $w = $opts{width}) {
-        if (looks_like_number($w)) {
+        if ($w =~ m/^[0-9]+$/s) {
             $self->{width} = sprintf('%.2f', $w / 100);
         }
         else {
@@ -181,12 +180,12 @@ The HTML code for the image. Classes used:
   
   div.float_image_l {
       float: left;
-      margin-left: auto;
-      margin-right: auto;
   }
   
   div.float_image_f {
       clear: both;
+      margin-left: auto;
+      margin-right: auto;
   }
 
 
@@ -210,7 +209,7 @@ sub as_latex {
     if (my $realdesc = $self->desc) {
         # the \noindent here is harmless if you still want the label,
         # commenting out the \renewcommand*
-        $desc = "\n\\caption{\\noindent $realdesc}";
+        $desc = "\n\\caption[]{\\noindent $realdesc}";
     }
     my $src = $self->filename;
     my $out;
@@ -226,7 +225,7 @@ EOF
     else {
         $out =<<"EOF";
 
-\\begin{figure}[htp!]
+\\begin{figure}[htbp!]
 \\centering
 \\includegraphics[width=$width]{$src}$desc
 \\end{figure}
