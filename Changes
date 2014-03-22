@@ -1,12 +1,21 @@
 Revision history for perl module Text::Amuse
 
+0.11 2014-03-22
+
+ - Added missing "file" accessor in main module. Not really needed,
+   but nice to have.
+ - Added placeholders for other_language_codes and other_languages.
+
 0.10 2014-02-18
+
  - Bugfix: Fixed missing macedonian language in the list
 
 0.09 2014-02-16
+
  - Bugfix: Fixed corner cases with strings "0" which evaluate to false.
 
 0.08 2014-02-16
+
  - If tables have a caption (\caption[]{text}), they are floats now
  - Fixed line-breaks in captions
 
