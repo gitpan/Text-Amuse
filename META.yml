@@ -23,5 +23,5 @@ requires:
   File::Temp: '0'
   perl: '5.010001'
 resources:
-  repository: https://gitorious.org/text-amuse
-version: '0.14'
+  repository: https://github.com/melmothx/text-amuse
+version: '0.15'

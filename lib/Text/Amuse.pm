@@ -13,11 +13,11 @@ Text::Amuse - Perl module to generate HTML and LaTeX documents from Emacs Muse m
 
 =head1 VERSION
 
-Version 0.14
+Version 0.15
 
 =cut
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 
 =head1 SYNOPSIS
@@ -341,6 +341,10 @@ sub other_languages {
 }
 
 =head1 DIFFERENCES WITH THE ORIGINAL EMACS MUSE MARKUP
+
+The updated manual can be found at
+L<http://www.amusewiki.org/library/manual> and is also present between
+the test files (C<t/testfiles/manual.muse>).
 
 =head3 Inline markup
 

@@ -1,7 +1,5 @@
 bin/muse-quick.pl
 Changes
-examples/logo.png
-examples/manual.muse
 lib/Text/Amuse.pm
 lib/Text/Amuse/Document.pm
 lib/Text/Amuse/Element.pm
@@ -13,7 +11,6 @@ Makefile.PL
 MANIFEST			This list of files
 README
 t/00-load.t
-t/boilerplate.t
 t/br.t
 t/breakages.t
 t/broken.t
@@ -92,6 +89,10 @@ t/testfiles/list-and-fn.exp.html
 t/testfiles/list-and-fn.exp.ltx
 t/testfiles/list-and-fn.muse
 t/testfiles/lists.muse
+t/testfiles/m-l-manual-logo.png
+t/testfiles/manual.exp.html
+t/testfiles/manual.exp.ltx
+t/testfiles/manual.muse
 t/testfiles/myimage.png
 t/testfiles/nbsp.exp.html
 t/testfiles/nbsp.exp.ltx
@@ -99,6 +100,9 @@ t/testfiles/nbsp.muse
 t/testfiles/open-letter.muse
 t/testfiles/other.png
 t/testfiles/packing.muse
+t/testfiles/pagebreaks.exp.html
+t/testfiles/pagebreaks.exp.ltx
+t/testfiles/pagebreaks.muse
 t/testfiles/prova.muse
 t/testfiles/recursiv.muse
 t/testfiles/right.exp.html
