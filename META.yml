@@ -24,4 +24,4 @@ requires:
   perl: '5.010001'
 resources:
   repository: https://github.com/melmothx/text-amuse
-version: '0.17'
+version: '0.18'
